@@ -35,13 +35,13 @@ class Aligenie(Plugin):
 
 groups = set()  # 开启天猫精灵消息接收的群聊ID
 flask = Flask(__name__)  # 提供天猫精灵平台的HTTP回调接口
+channel = channel_factory.create_channel('wx')
 
 @flask.route('/aligenie', methods=['POST'])
 def aligenie():
     reply = Reply()
     reply.type = ReplyType.TEXT
     reply.content = 'Hello, Aligenie!'
-    channel = channel_factory.create_channel('wx')
     for group in groups:
         context = Context(ContextType.TEXT, '', {'receiver': group})
         channel.send(reply, context)
