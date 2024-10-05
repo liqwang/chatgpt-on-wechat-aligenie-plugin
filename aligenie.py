@@ -48,6 +48,6 @@ def aligenie():
     return 'OK'
 
 def run():  # 启动Flask的HTTP服务器
-    flask.run(port=80)
+    flask.run(host='0.0.0.0', port=80)
 
 threading.Thread(target=run).start()
