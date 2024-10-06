@@ -1,5 +1,5 @@
 import plugins, threading
-from flask import Flask, request, send_file
+from flask import Flask, request, jsonify, send_file
 from bridge.context import ContextType, Context
 from bridge.reply import Reply, ReplyType
 from channel import channel_factory
@@ -41,16 +41,27 @@ channel = channel_factory.create_channel('wx')
 def aligenie(file):
     return send_file(f'{file}', as_attachment=True)
 
+# https://aligenie.com/doc/20255408/mxi8t9
 @flask.route('/voice', methods=['POST'])
-def voice():
-    request.get_json()
+def voice() -> flask.json:
+    json = request.get_json()
+    text = json['utterance']
     reply = Reply()
     reply.type = ReplyType.TEXT
-    reply.content = 'Hello, Aligenie!'
+    reply.content = f'收到天猫精灵消息：\n{text}'
     for group in groups:
         context = Context(ContextType.TEXT, '', {'receiver': group})
         channel.send(reply, context)
-    return 'OK'
+    return jsonify({  # https://aligenie.com/doc/20255408/ehac4c
+        'returnCode': '0',
+        'returnErrorSolution': '',
+        'returnMessage': '',
+        'returnValue': {
+            'reply': '消息发送成功！',
+            'resultType': 'RESULT',
+            'executeCode': 'SUCCESS'
+        }
+    })
 
 def run():  # 启动Flask的HTTP服务器
     flask.run(host='0.0.0.0', port=80)
