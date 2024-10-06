@@ -1,5 +1,5 @@
 import plugins, threading
-from flask import Flask
+from flask import Flask, request, send_file
 from bridge.context import ContextType, Context
 from bridge.reply import Reply, ReplyType
 from channel import channel_factory
@@ -37,8 +37,13 @@ groups = set()  # 开启天猫精灵消息接收的群聊ID
 flask = Flask(__name__)  # 提供天猫精灵平台的HTTP回调接口
 channel = channel_factory.create_channel('wx')
 
-@flask.route('/aligenie', methods=['POST'])
-def aligenie():
+@flask.route('/aligenie/<file>', methods=['GET'])
+def aligenie(file):
+    return send_file(f'{file}', as_attachment=True)
+
+@flask.route('/voice', methods=['POST'])
+def voice():
+    request.get_json()
     reply = Reply()
     reply.type = ReplyType.TEXT
     reply.content = 'Hello, Aligenie!'
