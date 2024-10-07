@@ -44,7 +44,10 @@ def aligenie(file):
 # https://aligenie.com/doc/20255408/mxi8t9
 @flask.route('/voice', methods=['POST'])
 def voice() -> flask.json:
+    print(f'Headers: {request.headers}')
+    print(f'is_json: {request.is_json}')
     json = request.get_json()
+    print(f'Body: {json}')
     text = json['utterance']
     reply = Reply()
     reply.type = ReplyType.TEXT
