@@ -45,6 +45,7 @@ def aligenie(file):
 @flask.route('/voice', methods=['POST'])
 def voice() -> flask.json:
     data: str = request.get_data(as_text=True)
+    print(f'data: {data}')
     message = json.loads(data)
     text = message['utterance']
     reply = Reply()
